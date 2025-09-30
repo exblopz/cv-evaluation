@@ -1,24 +1,18 @@
-const { v4: uuidv4 } = require('uuid');
-const { uploads } = require('./uploadController');
-const { evaluations, runEvaluation } = require('../services/evaluationService');
+const { runEvaluation } = require("../services/evaluationService");
+const { uploads } = require("./uploadController");
 
-function startEvaluation(req, res, next) {
+async function evaluate(req, res, next) {
   try {
-    const { uploadId } = req.body;
-    if (!uploadId || !uploads[uploadId]) {
-      return res.status(400).json({ error: 'Invalid uploadId' });
+    const { id } = req.params;
+    if (!uploads[id]) {
+      return res.status(404).json({ error: "Upload ID not found" });
     }
 
-    const jobId = uuidv4();
-    evaluations[jobId] = { status: 'queued', uploadId };
-
-    // Simulasi evaluasi (async)
-    runEvaluation(jobId, uploads[uploadId]);
-
-    res.json({ id: jobId, status: 'queued' });
+    const jobId = await runEvaluation(id, uploads[id]);
+    res.json({ jobId, status: "processing" });
   } catch (err) {
     next(err);
   }
 }
 
-module.exports = { startEvaluation };
+module.exports = { evaluate };  // ✅ export function

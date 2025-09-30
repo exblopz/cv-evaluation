@@ -1,29 +1,27 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const { uploadFiles } = require('../controllers/uploadController');
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const { uploadFiles } = require("../controllers/uploadController");
 
 const router = express.Router();
 
-// Daftar ekstensi yang diizinkan
-const allowedExt = ['.pdf', '.docx', '.txt'];
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // folder tujuan
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname).toLowerCase();
+    const ext = path.extname(file.originalname);
     const baseName = path.basename(file.originalname, ext);
-    cb(null, Date.now() + '-' + baseName + ext);
-  }
+    cb(null, Date.now() + "-" + baseName + ext); // simpan dengan extension
+  },
 });
 
-// Filter file
+// Validasi file: hanya pdf, docx, txt
 function fileFilter(req, file, cb) {
+  const allowed = [".pdf", ".docx", ".txt"];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (!allowedExt.includes(ext)) {
-    return cb(new Error(`File type not allowed: ${ext}`), false);
+  if (!allowed.includes(ext)) {
+    return cb(new Error("Only PDF, DOCX, and TXT files are allowed"));
   }
   cb(null, true);
 }
@@ -31,8 +29,11 @@ function fileFilter(req, file, cb) {
 const upload = multer({ storage, fileFilter });
 
 router.post(
-  '/upload',
-  upload.fields([{ name: 'cv' }, { name: 'project' }]),
+  "/upload",
+  upload.fields([
+    { name: "cv", maxCount: 1 },
+    { name: "project", maxCount: 1 },
+  ]),
   uploadFiles
 );
 

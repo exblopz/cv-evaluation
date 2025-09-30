@@ -1,8 +1,8 @@
-const express = require('express');
-const { startEvaluation } = require('../controllers/evaluateController');
+const express = require("express");
+const { evaluate } = require("../controllers/evaluateController");
 
 const router = express.Router();
 
-router.post('/evaluate', startEvaluation);
+router.post("/evaluate/:id", evaluate);  // ✅ handler adalah function
 
 module.exports = router;
