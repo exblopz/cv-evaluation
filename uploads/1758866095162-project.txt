@@ -1,0 +1,28 @@
+Title: AI CV & Project Evaluator Backend
+
+Candidate Information:
+- Full Name: John Doe
+- Email: john.doe@email.com
+
+Repository Link:
+https://github.com/johndoe/ai-cv-evaluator
+
+Approach & Design:
+- I started by breaking down requirements into 3 endpoints: /upload, /evaluate, /result.
+- I used Express.js as backend framework.
+- File upload handled with Multer, with support for PDF/DOCX/TXT.
+- Text extraction handled with pdf-parse and mammoth libraries.
+- I simulated async evaluation pipeline using setTimeout.
+- For scoring, I mocked AI responses but structured the code so real OpenAI API can be integrated later.
+
+Results & Reflection:
+- File extraction and API endpoints work correctly.
+- Evaluation pipeline runs asynchronously and returns structured JSON.
+- The AI part is mocked due to API limitation, but design is extendable.
+- With more time, I would integrate OpenAI API and a vector DB for RAG.
+
+Future Improvements:
+- Real AI integration.
+- Persistent storage with MongoDB/Postgres.
+- Authentication and security for file upload.
+- Dockerized deployment.
